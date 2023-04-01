@@ -80,12 +80,19 @@ http://127.0.0.1:9000/user/login?redirect=%2Fuser%2Flogin
 ![](8.png)
 
 
+其中Upstream是虚拟主机抽象，对给定的多个服务节点按照配置规则进行负载均衡(如果涉及到多台机器/多个节点，可在此配置使用什么负载均衡算法，每个节点的权重等)。此处不涉及多个节点，故而不配置Upstream(`上游`)，仅配置Route(`路由`)极客
 
 
 ---
 
 
 ![](9.png)
+
+APISIX 内置了三个限流限速插件：
+
+- limit-count：基于“固定窗口”的限速实现。
+- limit-req：基于漏桶原理的请求限速实现。
+- limit-conn：限制并发请求（或并发连接）。
 
 
 ![](10.png)
@@ -102,6 +109,27 @@ http://127.0.0.1:9000/user/login?redirect=%2Fuser%2Flogin
 
 
 此时5s内连续请求 https://api.openai.com/v1/chat/completions 接口超过一次，会返回503错误码及配置的错误信息
+
+
+
+<br>
+
+<font size=1 color=orange>
+
+其实"保护"不光是限流，认证&鉴权应该在限流之前。
+
+APISIX 内置了四个身份验证插件：
+
+- key-auth：基于 Key Authentication 的用户认证。
+- JWT-auth：基于 JWT (JSON Web Tokens) Authentication 的用户认证。
+- basic-auth：基于 basic auth 的用户认证。
+- wolf-rbac：基于 RBAC 的用户认证及授权。需要额外搭建 wolf 服务，提供用户、角色、资源等信息。
+
+不过auth和rate-limit都有现成的插件，仅有配置参数的差异，操作步骤相差不大，在此便不演示了~
+
+</font>
+
+
 
 
 ![](0.png)
